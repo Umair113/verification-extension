@@ -1,0 +1,37 @@
+{
+  "name": "Verification Extension",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Verify downloaded file",
+  "icons": {
+    "19" : "resources/images/icon_extension_19.png",
+    "32" : "resources/images/icon_extension_32.png",
+    "128" : "resources/images/icon_extension_128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "19" : "resources/images/icon_extension_19.png",
+      "32" : "resources/images/icon_extension_32.png",
+      "128" : "resources/images/icon_extension_128.png"
+    },
+    "default_title": "Verification Extension"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://tails.boum.org/install/download_2/"
+      ],
+      "js": [
+        "scripts/vendor/jquery-3.2.1.js",
+        "scripts/vendor/sha256.js",
+        "scripts/contentscript/conf.js",
+        "scripts/contentscript/verify.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+        "resources/*"
+  ]
+}
