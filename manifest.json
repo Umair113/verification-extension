@@ -16,21 +16,17 @@
     },
     "default_title": "Verification Extension"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://tails.boum.org/install/download_2/"
-      ],
-      "js": [
-        "scripts/vendor/jquery-3.2.1.js",
-        "scripts/vendor/sha256.js",
-        "scripts/contentscript/conf.js",
-        "scripts/contentscript/verify.js"
-      ],
-      "run_at": "document_end",
-      "all_frames": false
-    }
+  "background": {
+    "scripts": [
+      "scripts/background/background.js"
+    ]
+  },
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "tabs"
   ],
+
   "web_accessible_resources": [
         "resources/*"
   ]

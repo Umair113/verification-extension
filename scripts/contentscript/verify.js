@@ -4,22 +4,33 @@ class VerifyDownload{
         this.document = document;
         this.$ = $;
         this.conf = conf;
+		this.extVersion = chrome.runtime.getManifest().version;
+		console.log(this.extVersion);
 		this.init();
     }
     init(){
-    	this.fetchConf().done(()=>{
-			if(this.checkFileAPI()){
-				this.initWindowMessageListener();
-			}
-			else{
-				console.error("FileReader api not supported");
-			}
-		}).fail(()=>{
-    		console.error('failed to get conf');
+		let self = this;
+		if(this.checkFileAPI()){
+			this.fetchConf().done(()=>{
+				self.setVerifyListener();
+				self.initWindowMessageListener();
+			}).fail(()=>{
+				console.error('failed to get conf');
+			});
+		}
+		else{
+			console.error("FileReader api not supported");
+		}
+	}
+	setVerifyListener(){
+		let self = this;
+		this.$(this.document).on("change", this.conf.verifySelector, (e) => {
+			self.calculateHash(e.target);
 		});
 	}
 	fetchConf(){
     	let $dfd = this.$.Deferred();
+		let self = this;
 		let rxs = {
 			url: /\burl:\s*(https?:\/\/\S+)\b/,
 			size: /\bsize:\s*(\d+)\b/,
@@ -36,7 +47,7 @@ class VerifyDownload{
 				if (!m) return null;
 				df[p] = m[1];
 			}
-			this.df = df;
+			self.df = df;
 			$dfd.resolve();
 		}).fail(()=>{
     		$dfd.reject();
@@ -44,42 +55,77 @@ class VerifyDownload{
     	return $dfd;
 	}
     initWindowMessageListener(){
+		let self = this;
 		this.window.addEventListener("message", (event) => {
-			if (event.source !== this.window || !event.data){
+			if (event.source !== self.window){
 				return;
 			}
-			if (!this[event.data.method]) {
+			if(!event.data || !event.data.method) {
+				return;
+			}
+			if (!self[event.data.method]) {
 				console.error('Method "' + event.data.method + '" does not exist');
+				return;
 			}
 			event.data.args = event.data.args || [];
-			this[event.data.method].apply(this, event.data.args || []);
+			self[event.data.method].apply(self, event.data.args || []);
 		});
     }
 	checkFileAPI() {
-		if (this.window.File && this.window.FileReader && this.window.FileList && this.window.Blob) {
-			this.reader = new FileReader();
-			return true;
-		} else {
-			return false;
+		return (this.window.File && this.window.FileReader && this.window.FileList && this.window.Blob);
+	}
+	readFile(file, offset, $fdfd){
+		if (offset >= file.files[0].size) {
+			$fdfd.resolve();
+			return;
+		}
+		let self = this;
+		let CHUNK_SIZE = 2 * 1024 *1024;
+		let fr = new FileReader();
+		fr.onload = e => {
+			let chunk = e.target.result;
+			self.sha256.update(chunk);
+			offset += CHUNK_SIZE;
+			self.readFile(file, offset, $fdfd)
+		};
+		fr.onerror = (e) => {
+			console.error(e);
+			$fdfd.reject();
+		};
+		let slice = file.files[0].slice(offset, offset + CHUNK_SIZE);
+		fr.readAsArrayBuffer(slice);
+		if(offset === 0){
+			return $fdfd;
 		}
 	}
 	calculateHash(filePath) {
 		if(filePath.files && filePath.files[0]) {
+			let self = this;
+			this.window.postMessage({ action: "verifying"}, "*");
 			let fileSize = filePath.files[0].size;
-			if(this.df.size !== fileSize) {
-				console.error('file size does not match');
+			if(parseInt(this.df.size) !== fileSize) {
+				console.error('File size does not match');
+				this.window.postMessage({ action: "verification-failed"}, "*");
 				return;
 			}
-			this.reader.onload = (e) => {
-				let file = e.target.result;			//https://github.com/Caligatio/jsSHA
-				let sha256 = new jsSHA('SHA-256', 'TEXT'); //HEX, TEXT, B64, BYTES, or ARRAYBUFFER
-				sha256.update(file);
-				let hash = sha256.getHash("HEX");
-				if(this.df.hash !== hash) {
-					console.error('file hash does not match');
+			this.sha256 = new jsSHA('SHA-256', 'ARRAYBUFFER');
+			let startTime = new Date()/1;
+			this.readFile(filePath, 0, this.$.Deferred()).done(()=>{
+				let hash = this.sha256.getHash("HEX");
+				let endTime = new Date()/1;
+				console.log(`Elapsed time : ${endTime-startTime}`);
+				if(self.df.hash !== hash) {
+					console.error('File hash does not match');
+					self.window.postMessage({ action: "verification-failed"}, "*");
 				}
-			};
-			this.reader.readAsText(filePath.files[0]);
+				else{
+					console.log('File is original');
+					self.window.postMessage({ action: "verification-success"}, "*");
+				}
+			}).fail(()=>{
+				console.error('Error reading file');
+				self.window.postMessage({ action: "verification-failed"}, "*");
+			});
 		}
 	}
 }
