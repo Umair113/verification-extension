@@ -5,7 +5,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
 		];
 		let js = [
 			"scripts/vendor/jquery-3.2.1.js",
-			"scripts/vendor/sha256.js",
+			"scripts/vendor/forge.min.js",
 			"scripts/contentscript/conf.js",
 			"scripts/contentscript/verify.js"
 		];

@@ -93,7 +93,7 @@ class VerifyDownload{
 			$fdfd.reject();
 		};
 		let slice = file.files[0].slice(offset, offset + CHUNK_SIZE);
-		fr.readAsArrayBuffer(slice);
+		fr.readAsBinaryString(slice);
 		if(offset === 0){
 			return $fdfd;
 		}
@@ -108,10 +108,10 @@ class VerifyDownload{
 				this.window.postMessage({ action: "verification-failed"}, "*");
 				return;
 			}
-			this.sha256 = new jsSHA('SHA-256', 'ARRAYBUFFER');
+			this.sha256 = forge.md.sha256.create();
 			let startTime = new Date()/1;
 			this.readFile(filePath, 0, this.$.Deferred()).done(()=>{
-				let hash = this.sha256.getHash("HEX");
+				let hash = this.sha256.digest().toHex();
 				let endTime = new Date()/1;
 				console.log(`Elapsed time : ${endTime-startTime}`);
 				if(self.df.hash !== hash) {
