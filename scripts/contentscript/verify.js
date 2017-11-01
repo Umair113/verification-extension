@@ -110,7 +110,7 @@ class VerifyDownload{
 	calculateHash(filePath) {
 		if(filePath.files && filePath.files[0]) {
 			let self = this;
-			this.window.postMessage({ action: "verifying"}, "*");
+			this.window.postMessage({ action: "verifying",fileName:filePath.files[0].name}, "*");
 			let fileSize = filePath.files[0].size;
 			if(parseInt(this.df.size) !== fileSize) {
 				console.error('File size does not match');
