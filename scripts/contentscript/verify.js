@@ -5,6 +5,7 @@ class VerifyDownload{
         this.$ = $;
         this.conf = conf;
 		this.extVersion = chrome.runtime.getManifest().version;
+		this.lastCalculatedPercentage = 0;
 		console.log(this.extVersion);
 		this.init();
     }
@@ -84,9 +85,17 @@ class VerifyDownload{
 		let fr = new FileReader();
 		fr.onload = e => {
 			let chunk = e.target.result;
+			let progressPercent = 0;
 			self.sha256.update(chunk);
 			offset += CHUNK_SIZE;
-			self.readFile(file, offset, $fdfd)
+			progressPercent = parseInt((offset/file.files[0].size)*100);
+			if (progressPercent>100) progressPercent = 100;
+			if (!(progressPercent === this.lastCalculatedPercentage)){
+				self.window.postMessage({ action: "progress",percentage : progressPercent}, "*");
+				this.lastCalculatedPercentage = progressPercent;
+			}
+
+			self.readFile(file, offset, $fdfd);
 		};
 		fr.onerror = (e) => {
 			console.error(e);
