@@ -138,4 +138,36 @@ class VerifyDownload{
 		}
 	}
 }
+function checkVersion() {
+
+	function compareVersions(v1, v2) {
+		if (v1 === v2) return 0;
+		let [a, b] = [v1, v2].map(s => String(s).split("."));
+		for (let j = 0, len = Math.max(a.length, b.length); j < len; j++) {
+			let [x, y] = [a[j], b[j]].map(s => s || "0");
+			let [n1, n2] = [x, y].map(s => parseInt(s, 10));
+			if (n1 > n2) return 1;
+			if (n1 < n2) return -1;
+			[x, y] = [x, y].map(s => s.match(/[a-z].*/i));
+			if (x || y) {
+				if (x && y) return x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0;
+				return x ? -1 : 1;
+			}
+		}
+		return 0;
+	}
+
+	var version = $("#extension-version");
+	if (!version) return false;
+	var extenVersion = chrome.runtime.getManifest();
+	let versionCmp = compareVersions(extenVersion.version, version.textContent);
+	let ok = versionCmp >= 0;
+	document.documentElement.dataset.extension = ok ? "ok" : "old";
+	return ok;
+}
+
+if (!checkVersion()) {
+	document.documentElement.removeAttribute("data-phase");
+}
+
 let verify = new VerifyDownload(window, document, jQuery, conf);
