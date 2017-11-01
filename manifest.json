@@ -8,14 +8,7 @@
     "32" : "resources/images/icon_extension_32.png",
     "128" : "resources/images/icon_extension_128.png"
   },
-  "browser_action": {
-    "default_icon": {
-      "19" : "resources/images/icon_extension_19.png",
-      "32" : "resources/images/icon_extension_32.png",
-      "128" : "resources/images/icon_extension_128.png"
-    },
-    "default_title": "Verification Extension"
-  },
+
   "background": {
     "scripts": [
       "scripts/background/background.js"
