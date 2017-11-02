@@ -166,8 +166,11 @@ function checkVersion() {
 	return ok;
 }
 
-if (!checkVersion()) {
-	document.documentElement.removeAttribute("data-phase");
+
+if ($('#download-and-verify').length >=1){
+	if (!checkVersion()) {
+		document.documentElement.removeAttribute("data-phase");
+	}
+	let verify = new VerifyDownload(window, document, jQuery, conf);
 }
 
-let verify = new VerifyDownload(window, document, jQuery, conf);
