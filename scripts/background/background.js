@@ -1,7 +1,8 @@
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
 	if (info.status === 'loading') {
-		let matches =
-				"://tails.boum.org/";
+		let matches =[
+				"://tails.boum.org/"
+				]
 		let js = [
 			"scripts/vendor/jquery-3.2.1.js",
 			"scripts/vendor/forge.min.js",
