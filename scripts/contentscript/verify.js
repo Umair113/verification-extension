@@ -157,10 +157,10 @@ function checkVersion() {
 		return 0;
 	}
 
-	var version = $("#extension-version");
+	var version = $("#extension-version").text();
 	if (!version) return false;
 	var extenVersion = chrome.runtime.getManifest();
-	let versionCmp = compareVersions(extenVersion.version, version.textContent);
+	let versionCmp = compareVersions(extenVersion.version, version);
 	let ok = versionCmp >= 0;
 	document.documentElement.dataset.extension = ok ? "up-to-date" : "outdated";
 	return ok;
