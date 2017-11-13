@@ -2,7 +2,7 @@
   "name": "Tails Verification",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "Verify downloaded file",
+  "description": "Verify a Tails download",
   "icons": {
     "19" : "resources/images/icon_extension_19.png",
     "32" : "resources/images/icon_extension_32.png",
