@@ -11,6 +11,9 @@ class VerifyDownload{
     }
     init(){
 		let self = this;
+
+		this.showVerifyDownload();
+
 		if(this.checkFileAPI()){
 			this.fetchConf().done(()=>{
 				self.setVerifyListener();
@@ -137,7 +140,28 @@ class VerifyDownload{
 			});
 		}
 	}
+
+	showVerifyDownload() {
+    hide(document.getElementById('install-extension'));
+    hide(document.getElementById('update-extension'));
+    show(document.getElementById('verification'));
+	}
 }
+
+function hide(elm) {
+  elm.style.display = 'none';
+}
+
+function show(elm) {
+  elm.style.display = 'initial';
+  if(elm.classList.contains('block')) {
+    elm.style.display = 'block';
+  }
+  if(elm.classList.contains('inline-block')) {
+    elm.style.display = 'inline-block';
+  }
+}
+
 function checkVersion() {
 
 	function compareVersions(v1, v2) {
@@ -173,4 +197,3 @@ if ($('#activate-tails-verification').length >=1){
 	}
 	let verify = new VerifyDownload(window, document, jQuery, conf);
 }
-
