@@ -11,6 +11,9 @@ class VerifyDownload{
     }
     init(){
 		let self = this;
+
+		self.window.postMessage({ action: "extension-installed" }, "*");
+
 		if(this.checkFileAPI()){
 			this.fetchConf().done(()=>{
 				self.setVerifyListener();
@@ -167,7 +170,7 @@ function checkVersion() {
 }
 
 
-if ($('#download-and-verify').length >=1){
+if ($('#install-extension').length >=1){
 	if (!checkVersion()) {
 		document.documentElement.removeAttribute("data-phase");
 	}
