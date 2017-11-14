@@ -1,6 +1,6 @@
 {
   "name": "Tails Verification",
-  "version": "1.0",
+  "version": "0.92",
   "manifest_version": 2,
   "description": "Verify a Tails download",
   "icons": {
