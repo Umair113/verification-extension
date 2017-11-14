@@ -15,8 +15,7 @@
     ]
   },
   "permissions": [
-    "http://*/*",
-    "https://*/*",
+    "https://tails.boum.org/*",
     "tabs"
   ],
 
