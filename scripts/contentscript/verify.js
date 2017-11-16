@@ -36,10 +36,10 @@ class VerifyDownload{
     	let $dfd = this.$.Deferred();
 		let self = this;
 		let rxs = {
-			url: /\burl:\s*(https?:\/\/\S+)\b/,
-			size: /\bsize:\s*(\d+)\b/,
-			hash: /\bsha256:\s*([a-f0-9]{64})\b/,
-			version: /\bversion:\s*['"]([0-9.]+)['"]/
+			url: (/\burl:\s*(https?:\/\/\S+)\b/),
+			size: (/\bsize:\s*(\d+)\b/),
+			hash: (/\bsha256:\s*([a-f0-9]{64})\b/),
+			version: (/\bversion:\s*['"]([0-9.]+)['"]/)
 		};
     	let ajaxData = {};
     	ajaxData.url= this.conf.descriptor;
@@ -191,7 +191,7 @@ function checkVersion() {
 }
 
 
-if ($('#install-extension').length >=1){
+if ($('#download-and-verify').length >=1){
 	if (!checkVersion()) {
 		document.documentElement.removeAttribute("data-phase");
 	}
