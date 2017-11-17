@@ -1,13 +1,13 @@
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
-	if (info.status === 'loading') {
-		injectScripts(tab);
-	}
+  if (info.status === 'loading') {
+    injectScripts(tab);
+  }
 });
 
 // inject scripts into already opened tabs
 chrome.tabs.query({ url: 'https://tails.boum.org/*' }, function(tabs) {
   for (let tab of tabs) {
-		injectScripts(tab);
+    injectScripts(tab);
   }
 });
 

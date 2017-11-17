@@ -1,16 +1,16 @@
-class VerifyDownload{
-	constructor(window, document, $, conf){
-		this.window = window;
-		this.document = document;
-		this.$ = $;
-		this.conf = conf;
-		this.extVersion = chrome.runtime.getManifest().version;
-		this.lastCalculatedPercentage = 0;
-		console.log(this.extVersion);
-		this.init();
-	}
+class VerifyDownload {
+  constructor(window, document, $, conf){
+    this.window = window;
+    this.document = document;
+    this.$ = $;
+    this.conf = conf;
+    this.extVersion = chrome.runtime.getManifest().version;
+    this.lastCalculatedPercentage = 0;
+    console.log(this.extVersion);
+    this.init();
+  }
 
-	init() {
+  init() {
     let self = this;
 
     self.window.postMessage({ action: 'extension-installed' }, '*');
@@ -36,7 +36,7 @@ class VerifyDownload{
   }
 
   fetchConf() {
-		let $dfd = this.$.Deferred();
+    let $dfd = this.$.Deferred();
     let self = this;
     let rxs = {
       url: (/\burl:\s*(https?:\/\/\S+)\b/),
@@ -45,9 +45,9 @@ class VerifyDownload{
       version: (/\bversion:\s*['"]([0-9.]+)['"]/)
     };
 
-		let ajaxData = {};
-		ajaxData.url= this.conf.descriptor;
-		this.$.ajax(ajaxData).done((data) => {
+    let ajaxData = {};
+    ajaxData.url= this.conf.descriptor;
+    this.$.ajax(ajaxData).done((data) => {
       data = data.replace(/^[^'"]*#.*/gm, ''); // remove most comments
       let df = {};
       for (let p in rxs) {
@@ -61,26 +61,26 @@ class VerifyDownload{
         $dfd.reject();
     });
 
-		return $dfd;
+    return $dfd;
   }
 
-	initWindowMessageListener(){
-		let self = this;
-		this.window.addEventListener('message', (event) => {
-			if (event.source !== self.window){
-				return;
-			}
-			if(!event.data || !event.data.method) {
-				return;
-			}
-			if (!self[event.data.method]) {
-				console.error('Method "' + event.data.method + '" does not exist');
-				return;
-			}
-			event.data.args = event.data.args || [];
-			self[event.data.method].apply(self, event.data.args || []);
-		});
-	}
+  initWindowMessageListener() {
+    let self = this;
+    this.window.addEventListener('message', (event) => {
+      if (event.source !== self.window){
+        return;
+      }
+      if(!event.data || !event.data.method) {
+        return;
+      }
+      if (!self[event.data.method]) {
+        console.error('Method "' + event.data.method + '" does not exist');
+        return;
+      }
+      event.data.args = event.data.args || [];
+      self[event.data.method].apply(self, event.data.args || []);
+    });
+  }
 
   checkFileAPI() {
     return (this.window.File && this.window.FileReader && this.window.FileList && this.window.Blob);
