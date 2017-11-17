@@ -1,0 +1,47 @@
+From 76e29eeced63e152864539291a0568852f4f7291 Mon Sep 17 00:00:00 2001
+From: sajolida <sajolida@pimienta.org>
+Date: Fri, 17 Nov 2017 13:50:28 +0000
+Subject: [PATCH] Make the extension work on a local build of the website
+
+---
+ manifest.json                    | 1 +
+ scripts/background/background.js | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/manifest.json b/manifest.json
+index da9d169..3fd833d 100644
+--- a/manifest.json
++++ b/manifest.json
+@@ -15,6 +15,7 @@
+     ]
+   },
+   "permissions": [
++    "file:///*",
+     "https://tails.boum.org/*",
+     "tabs"
+   ],
+diff --git a/scripts/background/background.js b/scripts/background/background.js
+index 4983fd4..a98f2ba 100644
+--- a/scripts/background/background.js
++++ b/scripts/background/background.js
+@@ -5,7 +5,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
+ });
+ 
+ // inject scripts into already opened tabs
+-chrome.tabs.query({ url: 'https://tails.boum.org/*' }, function(tabs) {
++chrome.tabs.query({ url: 'file:///*' }, function(tabs) {
+   for (let tab of tabs) {
+     injectScripts(tab);
+   }
+@@ -14,7 +14,7 @@ chrome.tabs.query({ url: 'https://tails.boum.org/*' }, function(tabs) {
+ 
+ function injectScripts(tab) {
+   let matches =[
+-    'https://tails.boum.org'
++    'file:///'
+   ];
+ 
+   let js = [
+-- 
+2.11.0
+

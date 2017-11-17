@@ -38,6 +38,13 @@ Chrome
 Testing the extension locally
 =============================
 
+Permissions
+-----------
+
+- To allow the extension to run on a local build of the website:
+
+  cat 0001-Make-the-extension-work-on-a-local-build-of-the-webs.patch | git apply -
+
 Firefox
 -------
 
