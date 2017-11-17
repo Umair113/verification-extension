@@ -186,15 +186,14 @@ function checkVersion() {
 	var extenVersion = chrome.runtime.getManifest();
 	let versionCmp = compareVersions(extenVersion.version, version);
 	let ok = versionCmp >= 0;
-	document.documentElement.dataset.extension = ok ? "ok" : "old";
+	document.documentElement.dataset.extension = ok ? "up-to-date" : "outdated";
 	return ok;
 }
 
 
-if ($('#download-and-verify').length >=1){
+if ($('#activate-tails-verification').length >=1){
 	if (!checkVersion()) {
 		document.documentElement.removeAttribute("data-phase");
 	}
 	let verify = new VerifyDownload(window, document, jQuery, conf);
 }
-
