@@ -12,7 +12,7 @@ class VerifyDownload{
     init(){
 		let self = this;
 
-		self.window.postMessage({ action: "extension-installed" }, "*");
+		self.window.postMessage({ action: 'extension-installed' }, '*');
 
 		if(this.checkFileAPI()){
 			this.fetchConf().done(()=>{
@@ -23,12 +23,12 @@ class VerifyDownload{
 			});
 		}
 		else{
-			console.error("FileReader api not supported");
+			console.error('FileReader api not supported');
 		}
 	}
 	setVerifyListener(){
 		let self = this;
-		this.$(this.document).on("change", this.conf.verifySelector, (e) => {
+		this.$(this.document).on('change', this.conf.verifySelector, (e) => {
 			self.calculateHash(e.target);
 		});
 	}
@@ -60,7 +60,7 @@ class VerifyDownload{
 	}
     initWindowMessageListener(){
 		let self = this;
-		this.window.addEventListener("message", (event) => {
+		this.window.addEventListener('message', (event) => {
 			if (event.source !== self.window){
 				return;
 			}
@@ -94,7 +94,7 @@ class VerifyDownload{
 			progressPercent = parseInt((offset/file.files[0].size)*100);
 			if (progressPercent>100) progressPercent = 100;
 			if (!(progressPercent === this.lastCalculatedPercentage)){
-				self.window.postMessage({ action: "progress",percentage : progressPercent}, "*");
+				self.window.postMessage({ action: 'progress',percentage : progressPercent}, '*');
 				this.lastCalculatedPercentage = progressPercent;
 			}
 
@@ -113,11 +113,11 @@ class VerifyDownload{
 	calculateHash(filePath) {
 		if(filePath.files && filePath.files[0]) {
 			let self = this;
-			this.window.postMessage({ action: "verifying",fileName:filePath.files[0].name}, "*");
+			this.window.postMessage({ action: 'verifying',fileName:filePath.files[0].name}, '*');
 			let fileSize = filePath.files[0].size;
 			if(parseInt(this.df.size) !== fileSize) {
 				console.error('File size does not match');
-				this.window.postMessage({ action: "verification-failed"}, "*");
+				this.window.postMessage({ action: 'verification-failed'}, '*');
 				return;
 			}
 			this.sha256 = forge.md.sha256.create();
@@ -128,15 +128,15 @@ class VerifyDownload{
 				console.log(`Elapsed time : ${endTime-startTime}`);
 				if(self.df.hash !== hash) {
 					console.error('File hash does not match');
-					self.window.postMessage({ action: "verification-failed"}, "*");
+					self.window.postMessage({ action: 'verification-failed'}, '*');
 				}
 				else{
 					console.log('File is original');
-					self.window.postMessage({ action: "verification-success"}, "*");
+					self.window.postMessage({ action: 'verification-success'}, '*');
 				}
 			}).fail(()=>{
 				console.error('Error reading file');
-				self.window.postMessage({ action: "verification-failed"}, "*");
+				self.window.postMessage({ action: 'verification-failed'}, '*');
 			});
 		}
 	}
@@ -145,9 +145,9 @@ function checkVersion() {
 
 	function compareVersions(v1, v2) {
 		if (v1 === v2) return 0;
-		let [a, b] = [v1, v2].map(s => String(s).split("."));
+		let [a, b] = [v1, v2].map(s => String(s).split('.'));
 		for (let j = 0, len = Math.max(a.length, b.length); j < len; j++) {
-			let [x, y] = [a[j], b[j]].map(s => s || "0");
+			let [x, y] = [a[j], b[j]].map(s => s || '0');
 			let [n1, n2] = [x, y].map(s => parseInt(s, 10));
 			if (n1 > n2) return 1;
 			if (n1 < n2) return -1;
@@ -160,19 +160,19 @@ function checkVersion() {
 		return 0;
 	}
 
-	var version = $("#extension-version").text();
+	var version = $('#extension-version').text();
 	if (!version) return false;
 	var extenVersion = chrome.runtime.getManifest();
 	let versionCmp = compareVersions(extenVersion.version, version);
 	let ok = versionCmp >= 0;
-	document.documentElement.dataset.extension = ok ? "up-to-date" : "outdated";
+	document.documentElement.dataset.extension = ok ? 'up-to-date' : 'outdated';
 	return ok;
 }
 
 
 if ($('#activate-tails-verification').length >=1){
 	if (!checkVersion()) {
-		document.documentElement.removeAttribute("data-phase");
+		document.documentElement.removeAttribute('data-phase');
 	}
 	let verify = new VerifyDownload(window, document, jQuery, conf);
 }

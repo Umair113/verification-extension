@@ -5,7 +5,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
 });
 
 // inject scripts into already opened tabs
-chrome.tabs.query({ url: "https://tails.boum.org/*" }, function(tabs) {
+chrome.tabs.query({ url: 'https://tails.boum.org/*' }, function(tabs) {
   for (let tab of tabs) {
 		injectScripts(tab);
   }
@@ -14,14 +14,14 @@ chrome.tabs.query({ url: "https://tails.boum.org/*" }, function(tabs) {
 
 function injectScripts(tab) {
   let matches =[
-    "https://tails.boum.org"
+    'https://tails.boum.org'
   ];
 
   let js = [
-    "scripts/vendor/jquery-3.2.1.js",
-    "scripts/vendor/forge.min.js",
-    "scripts/contentscript/conf.js",
-    "scripts/contentscript/verify.js"
+    'scripts/vendor/jquery-3.2.1.js',
+    'scripts/vendor/forge.min.js',
+    'scripts/contentscript/conf.js',
+    'scripts/contentscript/verify.js'
   ];
 
   if(tab.url.indexOf(matches) > -1) {
