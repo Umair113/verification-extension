@@ -1,0 +1,15 @@
+-*- mode: markdown; -*-
+
+# Getting started
+
+https://developer.mozilla.org/en-US/Add-ons/WebExtensions
+
+# Installing/Testing the extension locally
+1. Open "about:debugging" in Firefox
+2. Click "Load Temporary Add-on" and select any file in your extension's directory
+
+
+# Building a ZIP to upload to AMO
+1. Open the src directory of the repository.
+2. Select all of the files.
+3. Right click and choose Send to → Compressed (zipped) Folder.
