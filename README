@@ -1,15 +1,47 @@
 -*- mode: markdown; -*-
 
-# Getting started
+Release
+=======
 
-https://developer.mozilla.org/en-US/Add-ons/WebExtensions
+1. Add a Git tag:
 
-# Installing/Testing the extension locally
-1. Open "about:debugging" in Firefox
-2. Click "Load Temporary Add-on" and select any file in your extension's directory
+    git tag $VERSION
 
+2. Build a ZIP for submission:
 
-# Building a ZIP to upload to AMO
-1. Open the src directory of the repository.
-2. Select all of the files.
-3. Right click and choose Send to → Compressed (zipped) Folder.
+    zip -r -FS tails-verification-$VERSION.zip manifest.json resources scripts
+
+Firefox
+-------
+
+1. Log on https://addons.mozilla.org/:
+
+    keyringer internal decrypt credentials.asc | grep addons.mozilla.org
+
+2. Submit a new version:
+
+    https://developer.mozilla.org/en-US/Add-ons/WebExtensions
+
+Chrome
+------
+
+1. Log on https://accounts.google.com/:
+
+   /!\ Always use our Google account through misc.lizard /!\
+
+    ssh -D 8080 p3qyu44w4heksmuk.onion
+
+2. Submit a new version:
+
+    https://chrome.google.com/webstore/developer/dashboard
+
+Testing the extension locally
+=============================
+
+Firefox
+-------
+
+1. Open "about:debugging" in Firefox.
+
+2. Click "Load Temporary Add-on" and select any file in your extension's
+directory.
