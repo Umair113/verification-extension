@@ -13,7 +13,7 @@ class VerifyDownload {
   init() {
     let self = this;
 
-    self.window.postMessage({ action: 'extension-installed' }, '*');
+    self.postMessage({ action: 'extension-installed' });
 
     if (this.checkFileAPI()) {
       this.fetchConf().done(()=> {
@@ -104,7 +104,7 @@ class VerifyDownload {
       progressPercent = parseInt((offset/file.files[0].size)*100);
       if (progressPercent>100) progressPercent = 100;
       if (!(progressPercent === this.lastCalculatedPercentage)){
-        self.window.postMessage({ action: 'progress',percentage : progressPercent}, '*');
+        self.postMessage({ action: 'progress',percentage : progressPercent});
         this.lastCalculatedPercentage = progressPercent;
       }
 
@@ -126,12 +126,12 @@ class VerifyDownload {
   calculateHash(filePath) {
     if(filePath.files && filePath.files[0]) {
       let self = this;
-      this.window.postMessage({ action: 'verifying',fileName:filePath.files[0].name}, '*');
+      self.postMessage({ action: 'verifying',fileName:filePath.files[0].name});
       let fileSize = filePath.files[0].size;
 
       if (parseInt(this.df.size) !== fileSize) {
         console.error('File size does not match');
-        this.window.postMessage({ action: 'verification-failed'}, '*');
+        self.postMessage({ action: 'verification-failed'});
         return;
       }
 
@@ -143,17 +143,21 @@ class VerifyDownload {
         console.log(`Elapsed time : ${endTime-startTime}`);
         if (self.df.hash !== hash) {
           console.error('File hash does not match');
-          self.window.postMessage({ action: 'verification-failed'}, '*');
+          self.postMessage({ action: 'verification-failed'});
         }
         else {
           console.log('File is original');
-          self.window.postMessage({ action: 'verification-success'}, '*');
+          self.postMessage({ action: 'verification-success'});
         }
       }).fail(()=> {
         console.error('Error reading file');
-        self.window.postMessage({ action: 'verification-failed'}, '*');
+        self.postMessage({ action: 'verification-failed'});
       });
     }
+  }
+
+  postMessage(data) {
+    this.window.postMessage(data, 'https://tails.boum.org');
   }
 }
 
