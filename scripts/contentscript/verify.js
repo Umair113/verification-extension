@@ -157,7 +157,7 @@ class VerifyDownload {
   }
 
   postMessage(data) {
-    // make sure to that the message is only received by pages of 'https://tails.boum.org'. The messages won't be received
+    // make sure that the message is only received by pages of 'https://tails.boum.org'. The messages won't be received
     // by any page which does not have the same protocol, port and origin
     this.window.postMessage(data, 'https://tails.boum.org');
   }
