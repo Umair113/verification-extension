@@ -1,3 +1,7 @@
+/*
+ * Copyright 2017, Tails developers <tails@boum.org>
+ */
+
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
   if (info.status === 'loading') {
     injectScripts(tab);

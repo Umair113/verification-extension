@@ -1,3 +1,7 @@
+/*
+ * Copyright 2017, Tails developers <tails@boum.org>
+ */
+
 class VerifyDownload {
   constructor(window, document, $, conf){
     this.window = window;
