@@ -13,9 +13,7 @@ chrome.tabs.query({ url: 'https://tails.boum.org/*' }, function(tabs) {
 
 
 function injectScripts(tab) {
-  let matches =[
-    'https://tails.boum.org'
-  ];
+  let matches = 'https://tails.boum.org';
 
   let js = [
     'scripts/vendor/jquery-3.2.1.js',
@@ -24,7 +22,7 @@ function injectScripts(tab) {
     'scripts/contentscript/verify.js'
   ];
 
-  if(tab.url.indexOf(matches) > -1) {
+  if(tab.url.indexOf(matches) === 0) {
     for(let i=0; i < js.length; i++){
       chrome.tabs.executeScript(tab.id, {
         file: js[i],
