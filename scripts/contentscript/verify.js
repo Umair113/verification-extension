@@ -72,6 +72,23 @@ class VerifyDownload {
   }
 
   readFile(file, offset, $fdfd){
+	  function ArrayBufferToString(buffer) {
+		  return BinaryToString(String.fromCharCode.apply(null, Array.prototype.slice.apply(new Uint8Array(buffer))));
+	  }
+	  function BinaryToString(binary) {
+		  let error;
+
+		  try {
+			  return decodeURIComponent(escape(binary));
+		  } catch (_error) {
+			  error = _error;
+			  if (error instanceof URIError) {
+				  return binary;
+			  } else {
+				  throw error;
+			  }
+		  }
+	  }
     if (offset >= file.files[0].size) {
       $fdfd.resolve();
       return;
@@ -83,8 +100,8 @@ class VerifyDownload {
 
     fr.onload = e => {
       let chunk = e.target.result;
-      let progressPercent = 0;
-      self.sha256.update(chunk);
+      let progressPercent;
+      self.sha256.update(ArrayBufferToString(chunk));
       offset += CHUNK_SIZE;
       progressPercent = parseInt((offset/file.files[0].size)*100);
       if (progressPercent>100) progressPercent = 100;
@@ -102,7 +119,7 @@ class VerifyDownload {
     };
 
     let slice = file.files[0].slice(offset, offset + CHUNK_SIZE);
-    fr.readAsBinaryString(slice);
+    fr.readAsArrayBuffer(slice);
 
     if(offset === 0){
       return $fdfd;
