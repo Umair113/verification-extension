@@ -22,7 +22,6 @@ class VerifyDownload {
     if (this.checkFileAPI()) {
       this.fetchConf().done(()=> {
         self.setVerifyListener();
-        self.initWindowMessageListener();
       }).fail(()=> {
         console.error('failed to get conf');
       });
@@ -66,24 +65,6 @@ class VerifyDownload {
     });
 
     return $dfd;
-  }
-
-  initWindowMessageListener() {
-    let self = this;
-    this.window.addEventListener('message', (event) => {
-      if (event.source !== self.window){
-        return;
-      }
-      if(!event.data || !event.data.method) {
-        return;
-      }
-      if (!self[event.data.method]) {
-        console.error('Method "' + event.data.method + '" does not exist');
-        return;
-      }
-      event.data.args = event.data.args || [];
-      self[event.data.method].apply(self, event.data.args || []);
-    });
   }
 
   checkFileAPI() {
