@@ -73,21 +73,8 @@ class VerifyDownload {
 
   readFile(file, offset, $fdfd){
 	  function ArrayBufferToString(buffer) {
-		  return BinaryToString(String.fromCharCode.apply(null, Array.prototype.slice.apply(new Uint8Array(buffer))));
-	  }
-	  function BinaryToString(binary) {
-		  let error;
-
-		  try {
-			  return decodeURIComponent(escape(binary));
-		  } catch (_error) {
-			  error = _error;
-			  if (error instanceof URIError) {
-				  return binary;
-			  } else {
-				  throw error;
-			  }
-		  }
+	    let uint8Buff = new Uint8Array(buffer);
+		return String.fromCharCode.apply(null, uint8Buff);
 	  }
     if (offset >= file.files[0].size) {
       $fdfd.resolve();
@@ -95,7 +82,7 @@ class VerifyDownload {
     }
 
     let self = this;
-    let CHUNK_SIZE = 2 * 1024 *1024;
+    let CHUNK_SIZE = 0.1 * 1024 *1024;
     let fr = new FileReader();
 
     fr.onload = e => {
