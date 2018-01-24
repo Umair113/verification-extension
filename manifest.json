@@ -23,5 +23,5 @@
         "resources/*"
   ],
 
-  "content_security_policy": "default-src 'none';script-src 'self';"
+  "content_security_policy": "default-src 'none'"
 }
